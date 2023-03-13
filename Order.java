@@ -134,7 +134,7 @@ public class Order {
         return postOrderChoice;
     }
 
-    public void payment(Scanner input) {
+    public int payment(Scanner input) {
         System.out.println("Chose a payment method for your order. We offer cash or credit.");
         System.out.println("Enter '1' for cash and '2' for credit");
         this.paymentChoice = input.nextInt();
@@ -142,8 +142,11 @@ public class Order {
             System.out.println("Card accepted, payment completed.");
         }
         else if(paymentChoice == 1) {
-            cashPayment(input);
+            if(cashPayment(input) == 1) {
+                return 1;
+            }
         }
+        return 2;
     }
 
     public int cashPayment(Scanner input) {
@@ -159,5 +162,6 @@ public class Order {
         }
         return 0;
     }
+          
 
 }
