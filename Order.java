@@ -27,6 +27,10 @@ public class Order {
         return orderID;
     }
 
+    public void orderIDAdd() {
+        this.orderID++;
+    }
+
     public void displayItems() {
         System.out.println("Main Burger Dishes:");
         for(int i = 0; i < 3; i++){
@@ -44,20 +48,116 @@ public class Order {
 
     public void getItems(Scanner input) {
         System.out.println("First, choose a burger dish: Chicken, Beef or Vegetarian?");
-        System.out.println("Enter '0' for Chicken, '1' for Beef and '2' for Vegetarian:");
-        this.mainItem = input.nextInt();
-        System.out.println("How many would you like?");
-        this.mainQuantity = input.nextInt();
+        while(true){
+            System.out.println("Enter '0' for Chicken, '1' for Beef and '2' for Vegetarian:");
+            try{
+                this.mainItem = input.nextInt();
+                if(mainItem < 0 || mainItem > 2) {
+                    throw new Exception("Invalid input, only '0' '1' and '2' will be accepted.");
+                }
+                else if (mainItem == 0 || mainItem == 1 || mainItem == 2){
+                    break;
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        while(true){
+            System.out.println("How many would you like?");
+            try{
+                this.mainQuantity = input.nextInt();
+                if(mainQuantity <= 0) {
+                    throw new Exception("You're hungry aren't you? Please enter a quantity larger than 0.");
+                }
+                else if(mainQuantity > 0) {
+                    break;
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
         System.out.println("Next, choose a fry side size: Small, Medium or Large? ");
-        System.out.println("Enter '3' for Small, '4' for Medium and '5' for Large:");
-        this.sideItem = input.nextInt();
-        System.out.println("How many would you like?");
-        this.sideQuantity = input.nextInt();
+        while(true){
+            System.out.println("Enter '3' for Small, '4' for Medium and '5' for Large:");
+            try{
+                this.sideItem = input.nextInt();
+                if(sideItem < 3 || sideItem > 5) {
+                    throw new Exception("Invalid input, only '3' '4' and '5' will be accepted.");
+                }
+                if(sideItem == 3 || sideItem == 4 || sideItem == 5) {
+                    break;
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        while(true){
+            System.out.println("How many would you like?");
+            try{
+                this.sideQuantity = input.nextInt();
+                if(sideQuantity <= 0) {
+                    throw new Exception("You're hungry aren't you? Please enter a quantity larger than 0.");
+                }
+                else if(sideQuantity > 0) {
+                    break;
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
         System.out.println("Lastly, choose a drink: Coffee, Soda or Smoothie?");
-        System.out.println("Enter '6' for Coffee, '7' for Soda and '8' for Smoothie "); 
-        this.drinkItem = input.nextInt();
-        System.out.println("How many would you like?");
-        this.drinkQuantity = input.nextInt();
+        while(true){
+            System.out.println("Enter '6' for Coffee, '7' for Soda and '8' for Smoothie "); 
+            try{
+                this.drinkItem = input.nextInt();
+                if(drinkItem < 6 || drinkItem > 8) {
+                    throw new Exception("Invalid input, only '6' '7' and '8' will be accepted.");
+                }
+                if(drinkItem == 6 || drinkItem == 7 || drinkItem == 8) {
+                    break;
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        while(true){
+            System.out.println("How many would you like?");
+            try{
+                this.drinkQuantity = input.nextInt();
+                if(drinkQuantity <= 0) {
+                    throw new Exception("You're hungry aren't you? Please enter a quantity larger than 0.");
+                }
+                if(drinkQuantity > 0) {
+                    break;
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     public int getMainQuantity() {
@@ -126,42 +226,91 @@ public class Order {
     }
 
     public int postOrder(Scanner input) {
-        printSummary();
-        System.out.println("Double check your order. Are you ready to proceed?");
-        System.out.println("If you'd like to continue to the payment process, press '1'");
-        System.out.println("Otherwise, press '2' to modify your order.");
-        this.postOrderChoice = input.nextInt();
+        while(true){
+            System.out.println("Double check your order. Are you ready to proceed?");
+            System.out.println("If you'd like to continue to the payment process, press '1'");
+            System.out.println("If you'd like to modify your order and start from scratch, press '2'");
+            System.out.println("Otherwise, press 3 to cancel your order.");
+            try{
+                this.postOrderChoice = input.nextInt();
+                if(postOrderChoice < 0 || postOrderChoice > 3) {
+                    throw new Exception("Invalid input, please enter one of the valid choices as specified.");
+                }
+                if(postOrderChoice == 1 || postOrderChoice == 2 || postOrderChoice == 3) {
+                    break;
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
         return postOrderChoice;
     }
 
     public int payment(Scanner input) {
-        System.out.println("Chose a payment method for your order. We offer cash or credit.");
-        System.out.println("Enter '1' for cash and '2' for credit");
-        this.paymentChoice = input.nextInt();
-        if(paymentChoice == 2) {
-            System.out.println("Card accepted, payment completed.");
-        }
-        else if(paymentChoice == 1) {
-            if(cashPayment(input) == 1) {
-                return 1;
+        while(true){
+            System.out.println("Chose a payment method for your order. We offer cash or credit.");
+            System.out.println("Enter '1' for cash and '2' for credit");
+            try{
+                this.paymentChoice = input.nextInt();
+                if(paymentChoice == 2) {
+                    System.out.println("Card accepted, payment completed.");
+                    break;
+                }
+                else if(paymentChoice == 1) {
+                    if(cashPayment(input) == 1) {
+                        return 1;
+                    }
+                    else if(cashPayment(input) == 0) {
+                        return 2;
+                    }
+                }
+                else {
+                    throw new Exception();
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, please try Again.");
+            }
+            catch(Exception e) {
+                System.out.println("Invalid input, please try Again.");
             }
         }
         return 2;
     }
 
     public int cashPayment(Scanner input) {
-        System.out.printf("You've elected to pay with cash. Your total is $%.2f.%n",getTotal());
-        System.out.println("Enter the dollar amount for your cash payment:");
-        this.cashDollars = input.nextDouble();
-        if(cashDollars > getTotal()){
-            System.out.printf("Thank you for your payment! Here is your change: $%.2f%n",cashDollars-getTotal());
-        }
-        else if(cashDollars < getTotal()){
-            System.out.printf("Your payment was insufficient. We're sorry, but your order will be canceled.");
-            return 1;
+        while(true){
+            System.out.printf("You've elected to pay with cash. Your total is $%.2f.%n",getTotal());
+            System.out.println("Enter the dollar amount for your cash payment:");
+            try{
+                this.cashDollars = input.nextDouble();
+                if(cashDollars < 0) {
+                    throw new Exception("Please enter a positive dollar amount.");
+                }
+                if(cashDollars >= 0) {
+                    break;
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input entered, please enter a positive numerical dollar amount.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+            if(cashDollars > getTotal()){
+                System.out.printf("Thank you for your payment! Here is your change: $%.2f%n",cashDollars-getTotal());
+            }
+            else if(cashDollars < getTotal()){
+                System.out.printf("Your payment was insufficient. We're sorry, but your order will be canceled.");
+                return 1;
+            }
         }
         return 0;
     }
-          
 
 }
