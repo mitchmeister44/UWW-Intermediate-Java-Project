@@ -15,7 +15,12 @@ public class OrderTest {
                 postOrderChoice = userOrder.postOrder(input);
             }
             else if(postOrderChoice == 1){
-                userOrder.payment(input);
+                if(userOrder.payment(input) == 1) {
+                    userOrder.displayItems();
+                    userOrder.getItems(input);
+                    userOrder.printSummary();
+                    postOrderChoice = userOrder.postOrder(input);
+                }
                 break;
             }
         }
