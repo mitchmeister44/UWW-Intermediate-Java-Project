@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 public class Order {
     Random rand = new Random();
     private int orderID;
@@ -16,6 +17,8 @@ public class Order {
     private int postOrderChoice;
     private int paymentChoice;
     private double cashDollars;
+    private int userInput;
+    private int userInputQ;
 
     Order (){
         this.orderID = rand.nextInt(9999);
@@ -51,7 +54,9 @@ public class Order {
         while(true){
             System.out.println("Enter '0' for Chicken, '1' for Beef and '2' for Vegetarian:");
             try{
-                this.mainItem = input.nextInt();
+                userInput= input.nextInt();
+
+                this.mainItem =userInput;
                 if(mainItem < 0 || mainItem > 2) {
                     throw new Exception("Invalid input, only '0' '1' and '2' will be accepted.");
                 }
@@ -69,7 +74,9 @@ public class Order {
         while(true){
             System.out.println("How many would you like?");
             try{
-                this.mainQuantity = input.nextInt();
+                userInputQ = input.nextInt();
+                totalSummary();
+                this.mainQuantity = userInputQ;
                 if(mainQuantity <= 0) {
                     throw new Exception("You're hungry aren't you? Please enter a quantity larger than 0.");
                 }
@@ -88,7 +95,9 @@ public class Order {
         while(true){
             System.out.println("Enter '3' for Small, '4' for Medium and '5' for Large:");
             try{
-                this.sideItem = input.nextInt();
+                userInput = input.nextInt();
+
+                this.sideItem = userInput;
                 if(sideItem < 3 || sideItem > 5) {
                     throw new Exception("Invalid input, only '3' '4' and '5' will be accepted.");
                 }
@@ -106,7 +115,9 @@ public class Order {
         while(true){
             System.out.println("How many would you like?");
             try{
-                this.sideQuantity = input.nextInt();
+                userInputQ = input.nextInt();
+                totalSummary();
+                this.sideQuantity = userInputQ;
                 if(sideQuantity <= 0) {
                     throw new Exception("You're hungry aren't you? Please enter a quantity larger than 0.");
                 }
@@ -125,7 +136,9 @@ public class Order {
         while(true){
             System.out.println("Enter '6' for Coffee, '7' for Soda and '8' for Smoothie "); 
             try{
-                this.drinkItem = input.nextInt();
+                userInput = input.nextInt();
+
+                this.drinkItem = userInput;
                 if(drinkItem < 6 || drinkItem > 8) {
                     throw new Exception("Invalid input, only '6' '7' and '8' will be accepted.");
                 }
@@ -143,7 +156,9 @@ public class Order {
         while(true){
             System.out.println("How many would you like?");
             try{
-                this.drinkQuantity = input.nextInt();
+                userInputQ = input.nextInt();
+                totalSummary();
+                this.drinkQuantity = userInputQ;
                 if(drinkQuantity <= 0) {
                     throw new Exception("You're hungry aren't you? Please enter a quantity larger than 0.");
                 }
@@ -219,10 +234,10 @@ public class Order {
         System.out.printf("%s x%d\t\t\t$%.2f%n",getSideName(),getSideQuantity(),getSidePrice());
         System.out.printf("%s x%d\t\t\t$%.2f%n",getDrinkName(),getDrinkQuantity(),getDrinkPrice());
         System.out.println("-------------------------------------------");
-        //System.out.printf("Price Before Tax: $%.2f%n",getPrices());
-        //System.out.printf("Order Tax Total (5%): $%.2f%n",taxTotal());
+        System.out.printf("Price Before Tax: $%.2f%n",getPrices());
+        System.out.printf("Order Tax Total (5%%): $%.2f%n",taxTotal());
         System.out.printf("Total Amount Due After Tax: $%.2f%n",getTotal());
-        //System.out.printf("------Thank you for shopping with us!------%n%n");
+        System.out.printf("------Thank you for shopping with us!------%n%n");
     }
 
     public int postOrder(Scanner input) {
@@ -232,7 +247,7 @@ public class Order {
             System.out.println("If you'd like to modify your order and start from scratch, press '2'");
             System.out.println("Otherwise, press 3 to cancel your order.");
             try{
-                this.postOrderChoice = input.nextInt();
+                postOrderChoice = input.nextInt();
                 if(postOrderChoice < 0 || postOrderChoice > 3) {
                     throw new Exception("Invalid input, please enter one of the valid choices as specified.");
                 }
@@ -259,13 +274,16 @@ public class Order {
                 this.paymentChoice = input.nextInt();
                 if(paymentChoice == 2) {
                     System.out.println("Card accepted, payment completed.");
-                    break;
+                    
+                    return 1;
                 }
                 else if(paymentChoice == 1) {
                     if(cashPayment(input) == 1) {
+                        
                         return 1;
                     }
-                    else if(cashPayment(input) == 0) {
+                    else if(cashPayment(input) == 2) {
+                        
                         return 2;
                     }
                 }
@@ -280,20 +298,31 @@ public class Order {
                 System.out.println("Invalid input, please try Again.");
             }
         }
-        return 2;
+        
     }
 
     public int cashPayment(Scanner input) {
+        
         while(true){
             System.out.printf("You've elected to pay with cash. Your total is $%.2f.%n",getTotal());
             System.out.println("Enter the dollar amount for your cash payment:");
+            
             try{
                 this.cashDollars = input.nextDouble();
                 if(cashDollars < 0) {
                     throw new Exception("Please enter a positive dollar amount.");
                 }
                 if(cashDollars >= 0) {
-                    break;
+                    if(cashDollars > getTotal()){
+                        System.out.printf("Thank you for your payment! Here is your change: $%.2f%n",cashDollars-getTotal());
+                        
+                        return 1;
+                    }
+                    else if(cashDollars < getTotal()){
+                        System.out.println("Your payment was insufficient. We're sorry, but your order will be canceled.");
+                        return 2;
+                        
+                    }
                 }
             }
             catch(InputMismatchException e) {
@@ -302,15 +331,72 @@ public class Order {
             catch(Exception e) {
                 System.out.println(e.getMessage());
             }
-            if(cashDollars > getTotal()){
-                System.out.printf("Thank you for your payment! Here is your change: $%.2f%n",cashDollars-getTotal());
-            }
-            else if(cashDollars < getTotal()){
-                System.out.printf("Your payment was insufficient. We're sorry, but your order will be canceled.");
-                return 1;
-            }
+
         }
-        return 0;
+        
+                    
+    }
+
+    public void fileWriter(){
+
+        try(FileWriter writer= new FileWriter("Orders.txt",true); 
+        BufferedWriter b= new BufferedWriter(writer);
+        PrintWriter p= new PrintWriter(b)){
+            p.println("-----------------ORDER SUMMARY-------------------");
+            p.printf("ORDER ID: %d%n",getOrderID());
+            p.println("Item Name: \t\tItem Price:");
+            p.printf("%s x%d\t\t$%.2f%n",getMainName(),getMainQuantity(),getMainPrice());
+            p.printf("%s x%d\t\t\t$%.2f%n",getSideName(),getSideQuantity(),getSidePrice());
+            p.printf("%s x%d\t\t\t$%.2f%n",getDrinkName(),getDrinkQuantity(),getDrinkPrice());
+            p.println("-------------------------------------------");
+            p.printf("Price Before Tax: $%.2f%n",getPrices());
+            p.printf("Order Tax Total (5%%): $%.2f%n",taxTotal());
+            p.printf("Total Amount Due After Tax: $%.2f%n",getTotal());
+            p.printf("------Thank you for shopping with us!------%n%n");
+
+        } catch (IOException i){
+            i.printStackTrace();
+        }
+
+    }
+
+    public int[] totalSummary(){
+
+        int[] quantList= new int[9];      
+        quantList[userInput]=quantList[userInput]+userInputQ;
+        return quantList;
+    }
+    
+
+    public double totalEarned(int[] quantList){
+        double totalEarned=0;
+        for(int i=0;i<quantList.length;i++){
+            totalEarned=totalEarned+quantList[i]*prices[i];
+        }
+        return totalEarned;
+    }
+
+    public void totalSummaryPrint(int[] quantList,int cancelled,int fulfilled,int unfulfilled){
+        
+        try(FileWriter writer= new FileWriter("Summary.txt",true);
+        BufferedWriter b= new BufferedWriter(writer);
+        PrintWriter p= new PrintWriter(b)){
+            p.printf("Chicken Burger: %d%n",quantList[0]);
+            p.printf("Beef Burger: %d%n",quantList[1]);
+            p.printf("Vegetarian Burger: %d%n",quantList[2]);
+            p.printf("Small Fry: %d%n",quantList[3]);
+            p.printf("Medium Fry: %d%n",quantList[4]);
+            p.printf("Large Fry: %d%n",quantList[5]);
+            p.printf("Coffee: %d%n",quantList[6]);
+            p.printf("Soda: %d%n",quantList[7]);
+            p.printf("Smoothie: %d%n",quantList[8]);
+            p.printf("Total Orders: %d%n",Math.round((cancelled+fulfilled+unfulfilled)/2));
+            p.printf("Total Orders Processed: %d:(fulfilled)  %d:(unfulfilled)%n",fulfilled,unfulfilled);
+            p.printf("Total Amount Earned: %.2f%n",totalEarned(quantList));
+
+        }catch(IOException i){
+            i.printStackTrace();
+        }
     }
 
 }
