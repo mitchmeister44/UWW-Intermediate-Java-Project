@@ -16,35 +16,60 @@ public class OrderTest {
                 userOrder.displayItems();
                 userOrder.getItems(input);
                 userOrder.printSummary();
+                
                 postOrderChoice = userOrder.postOrder(input);
             }
-            else if(postOrderChoice == 1){
+            if(postOrderChoice == 1){
                 processedOrders++;
                 if(userOrder.payment(input) == 1) {
                     canceledOrders++;
-                    unfulfilled++;
-                    userOrder.displayItems();
-                    userOrder.getItems(input);
-                    userOrder.printSummary();
-                    postOrderChoice = userOrder.postOrder(input);
+                    fulfilled++;
+                    userOrder.fileWriter();
+                    System.out.println("Would you like to make another order? Enter '1' for yes or '2' for no");
+                    int userContinue = input.nextInt();
+                    if(userContinue==1){
+                        userOrder.orderIDAdd();
+                    }
+                    else if(userContinue==2){
+                        System.out.println("Thank you, come again!");
+                        break;
+                    }
                 }
                 else if(userOrder.payment(input) == 2) {
-                    fulfilled++;
+                    unfulfilled++;
+                    userOrder.fileWriter();
+                    System.out.println("Would you like to make another order? Enter '1' for yes or '2' for no");
+                    int userContinue = input.nextInt();
+                    if(userContinue==1){
+                        userOrder.orderIDAdd();
+                    }
+                    else if(userContinue==2){
+                        System.out.println("Thank you, come again!");
+                        
+                        break;
+                    }
                 }
             }
             else if(postOrderChoice == 3){
                 System.out.println("Order canceled.");
                 canceledOrders++;
+                userOrder.fileWriter();
+                System.out.println("Would you like to make another order? Enter '1' for yes or '2' for no");
+                int userContinue = input.nextInt();
+                if(userContinue==1){
+                    userOrder.orderIDAdd();
+                }
+                else if(userContinue==2){
+                    System.out.println("Thank you, come again!");
+                    
+                    break;
+                }
             }
-            System.out.println("Would you like to make another order? Enter 'y' or 'n'");
-            String userContinue = input.nextLine();
-            if(userContinue.equalsIgnoreCase("y")){
-                userOrder.orderIDAdd();
-            }
-            else if(userContinue.equalsIgnoreCase("n")){
-                System.out.println("Thank you, come again!");
-                break;
-            }
+
         }
+        
+        userOrder.totalSummaryPrint(userOrder.totalSummary(),canceledOrders,fulfilled,unfulfilled);
     }
+
+    
 }
