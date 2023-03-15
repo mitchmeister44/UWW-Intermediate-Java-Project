@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 public class Order {
+    //Variable initialization
     Random rand = new Random();
     private int orderID;
     private String[] items;
@@ -21,6 +22,7 @@ public class Order {
     private int userInputQ;
     private int[] quantList= new int[9];      
 
+    //Object constructor (Order ID and respective item names/prices)
     Order (){
         this.orderID = rand.nextInt(9999);
         this.items = new String[]{"Chicken Burger", "Beef Burger", "Vegetarian Burger", "Small Fry","Medium Fry","Large Fry", "Coffee", "Soda", "Smoothie"};
@@ -35,6 +37,7 @@ public class Order {
         this.orderID++;
     }
 
+    //Method is called prior to every order, displays all available menu items/options
     public void displayItems() {
         System.out.println("Main Burger Dishes:");
         for(int i = 0; i < 3; i++){
@@ -50,6 +53,7 @@ public class Order {
         }
     }
 
+    //Continuous user input steam, calling for item and quantity selection
     public void getItems(Scanner input) {
         if(orderID >= 7000) {
             System.out.println("Congratulations, you've been selected to take part in our promotion! A 20 percent discount will be applied to your order!");
@@ -253,6 +257,7 @@ public class Order {
         return getPrices()+taxTotal();
     }
 
+    //Method is called prior to the processing, cancellation, or modification of every order
     public void printSummary() {
         System.out.println("-----------------ORDER SUMMARY-------------------");
         System.out.printf("ORDER ID: %d%n",getOrderID());
@@ -267,6 +272,7 @@ public class Order {
         System.out.printf("------Thank you for shopping with us!------%n%n");
     }
 
+    //Post order decision method (cancel, modify, proceed)
     public int postOrder(Scanner input) {
         while(true){
             System.out.println("Double check your order. Are you ready to proceed?");
@@ -293,6 +299,7 @@ public class Order {
         return postOrderChoice;
     }
 
+    //Payment method called if user elects to proceed (card is contained within, cash is within its own distinct method)
     public int payment(Scanner input) {
         while(true){
             System.out.println("Chose a payment method for your order. We offer cash or credit.");
@@ -328,6 +335,7 @@ public class Order {
 
     }
 
+    //Cash payment method
     public int cashPayment(Scanner input) {
 
         while(true){
@@ -363,6 +371,7 @@ public class Order {
 
     }
 
+    //Individual order file writing method, called for each order respectively
     public void fileWriter(String status, String payment){
         try(FileWriter writer= new FileWriter("Orders.txt",true); 
         BufferedWriter b= new BufferedWriter(writer);
@@ -392,6 +401,7 @@ public class Order {
         return quantList;
     }
 
+    //Additive method to consolidate all item quantities gathered through the program's execution
     public double totalEarned(int[] quantList){
         double totalEarned=0;
         for(int i=0;i<quantList.length;i++){
@@ -400,6 +410,7 @@ public class Order {
         return totalEarned;
     }
 
+    //Summary report method, printed after all orders have been completed
     public void totalSummaryPrint(int[] quantList,int cancelled,int fulfilled,int unfulfilled){
 
         try(FileWriter writer= new FileWriter("Summary.txt",true);
