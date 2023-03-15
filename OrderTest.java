@@ -16,7 +16,7 @@ public class OrderTest {
                 userOrder.displayItems();
                 userOrder.getItems(input);
                 userOrder.printSummary();
-                
+
                 postOrderChoice = userOrder.postOrder(input);
             }
             if(postOrderChoice == 1){
@@ -24,7 +24,7 @@ public class OrderTest {
                 if(userOrder.payment(input) == 1) {
                     canceledOrders++;
                     fulfilled++;
-                    userOrder.fileWriter();
+                    userOrder.fileWriter("Fulfilled","Card");
                     System.out.println("Would you like to make another order? Enter '1' for yes or '2' for no");
                     int userContinue = input.nextInt();
                     if(userContinue==1){
@@ -37,7 +37,7 @@ public class OrderTest {
                 }
                 else if(userOrder.payment(input) == 2) {
                     unfulfilled++;
-                    userOrder.fileWriter();
+                    userOrder.fileWriter("Unfulfilled","Cash");
                     System.out.println("Would you like to make another order? Enter '1' for yes or '2' for no");
                     int userContinue = input.nextInt();
                     if(userContinue==1){
@@ -45,7 +45,7 @@ public class OrderTest {
                     }
                     else if(userContinue==2){
                         System.out.println("Thank you, come again!");
-                        
+
                         break;
                     }
                 }
@@ -53,7 +53,7 @@ public class OrderTest {
             else if(postOrderChoice == 3){
                 System.out.println("Order canceled.");
                 canceledOrders++;
-                userOrder.fileWriter();
+                userOrder.fileWriter("Canceled","N/A");
                 System.out.println("Would you like to make another order? Enter '1' for yes or '2' for no");
                 int userContinue = input.nextInt();
                 if(userContinue==1){
@@ -61,15 +61,14 @@ public class OrderTest {
                 }
                 else if(userContinue==2){
                     System.out.println("Thank you, come again!");
-                    
+
                     break;
                 }
             }
 
         }
-        
+
         userOrder.totalSummaryPrint(userOrder.totalSummary(),canceledOrders,fulfilled,unfulfilled);
     }
 
-    
 }
