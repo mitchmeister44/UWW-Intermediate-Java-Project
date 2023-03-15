@@ -19,6 +19,7 @@ public class Order {
     private double cashDollars;
     private int userInput;
     private int userInputQ;
+    private int[] quantList= new int[9];      
 
     Order (){
         this.orderID = rand.nextInt(9999);
@@ -50,6 +51,9 @@ public class Order {
     }
 
     public void getItems(Scanner input) {
+        if(orderID >= 7000) {
+            System.out.println("Congratulations, you've been selected to take part in our promotion! A 20 percent discount will be applied to your order!");
+        }
         System.out.println("First, choose a burger dish: Chicken, Beef or Vegetarian?");
         while(true){
             System.out.println("Enter '0' for Chicken, '1' for Beef and '2' for Vegetarian:");
@@ -200,22 +204,45 @@ public class Order {
     }
 
     public double getMainPrice() {
-        return getMainQuantity()*prices[this.mainItem];
+        if(orderID >= 7000){
+            return (getMainQuantity()*prices[this.mainItem])*.8;
+        }
+        else {
+            return getMainQuantity()*prices[this.mainItem];
+        }
     }
 
     public double getSidePrice() {
-        return getSideQuantity()*prices[this.sideItem];
+        if(orderID >= 7000){
+            return (getSideQuantity()*prices[this.sideItem])*.8;
+        }
+        else {
+            return getSideQuantity()*prices[this.sideItem];
+        }
     }
 
     public double getDrinkPrice() {
-        return getDrinkQuantity()*prices[this.drinkItem];
+        if(orderID >= 7000){
+            return (getDrinkQuantity()*prices[this.drinkItem])*.8;
+        }
+        else {
+            return getDrinkQuantity()*prices[this.drinkItem];
+        }
     }
 
     public double getPrices() {
-        this.mainPrice = getMainPrice();
-        this.sidePrice = getSidePrice();
-        this.drinkPrice = getDrinkPrice();
-        return mainPrice+sidePrice+drinkPrice;
+        if(orderID >= 7000){
+            this.mainPrice = getMainPrice()*0.8;
+            this.sidePrice = getSidePrice()*0.8;
+            this.drinkPrice = getDrinkPrice()*0.8;
+            return mainPrice+sidePrice+drinkPrice;
+        }
+        else {
+            this.mainPrice = getMainPrice();
+            this.sidePrice = getSidePrice();
+            this.drinkPrice = getDrinkPrice();
+            return mainPrice+sidePrice+drinkPrice;
+        }
     }
 
     public double taxTotal () {
@@ -274,16 +301,16 @@ public class Order {
                 this.paymentChoice = input.nextInt();
                 if(paymentChoice == 2) {
                     System.out.println("Card accepted, payment completed.");
-                    
+
                     return 1;
                 }
                 else if(paymentChoice == 1) {
                     if(cashPayment(input) == 1) {
-                        
+
                         return 1;
                     }
                     else if(cashPayment(input) == 2) {
-                        
+
                         return 2;
                     }
                 }
@@ -298,15 +325,15 @@ public class Order {
                 System.out.println("Invalid input, please try Again.");
             }
         }
-        
+
     }
 
     public int cashPayment(Scanner input) {
-        
+
         while(true){
             System.out.printf("You've elected to pay with cash. Your total is $%.2f.%n",getTotal());
             System.out.println("Enter the dollar amount for your cash payment:");
-            
+
             try{
                 this.cashDollars = input.nextDouble();
                 if(cashDollars < 0) {
@@ -315,13 +342,13 @@ public class Order {
                 if(cashDollars >= 0) {
                     if(cashDollars > getTotal()){
                         System.out.printf("Thank you for your payment! Here is your change: $%.2f%n",cashDollars-getTotal());
-                        
+
                         return 1;
                     }
                     else if(cashDollars < getTotal()){
                         System.out.println("Your payment was insufficient. We're sorry, but your order will be canceled.");
                         return 2;
-                        
+
                     }
                 }
             }
@@ -333,18 +360,18 @@ public class Order {
             }
 
         }
-        
-                    
+
     }
 
-    public void fileWriter(){
-
+    public void fileWriter(String status, String payment){
         try(FileWriter writer= new FileWriter("Orders.txt",true); 
         BufferedWriter b= new BufferedWriter(writer);
         PrintWriter p= new PrintWriter(b)){
             p.println("-----------------ORDER SUMMARY-------------------");
             p.printf("ORDER ID: %d%n",getOrderID());
             p.println("Item Name: \t\tItem Price:");
+            p.printf("Order Status (Cancelled/Fulfilled/Unfulfilled): %s%n",status);
+            p.printf("Payment Method Used: %s%n",payment);
             p.printf("%s x%d\t\t$%.2f%n",getMainName(),getMainQuantity(),getMainPrice());
             p.printf("%s x%d\t\t\t$%.2f%n",getSideName(),getSideQuantity(),getSidePrice());
             p.printf("%s x%d\t\t\t$%.2f%n",getDrinkName(),getDrinkQuantity(),getDrinkPrice());
@@ -361,12 +388,9 @@ public class Order {
     }
 
     public int[] totalSummary(){
-
-        int[] quantList= new int[9];      
         quantList[userInput]=quantList[userInput]+userInputQ;
         return quantList;
     }
-    
 
     public double totalEarned(int[] quantList){
         double totalEarned=0;
@@ -377,7 +401,7 @@ public class Order {
     }
 
     public void totalSummaryPrint(int[] quantList,int cancelled,int fulfilled,int unfulfilled){
-        
+
         try(FileWriter writer= new FileWriter("Summary.txt",true);
         BufferedWriter b= new BufferedWriter(writer);
         PrintWriter p= new PrintWriter(b)){
